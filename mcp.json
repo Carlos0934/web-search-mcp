@@ -1,0 +1,122 @@
+{
+  "name": "news-tools",
+  "version": "1.0.0",
+  "description": "MCP server exposing Google CSE news search and article fetch/clean tools.",
+  "tools": [
+    {
+      "name": "google_news_search",
+      "description": "Search recent news via Google CSE. Returns filtered, deduplicated results (primary articles preferred).",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "topic": { 
+            "type": "string", 
+            "description": "Topic to search (e.g., 'artificial intelligence')." 
+          },
+          "dateRestrict": { 
+            "type": "string", 
+            "description": "Freshness window: d1, d3, w1, m1.", 
+            "default": "d3" 
+          },
+          "gl": { 
+            "type": "string", 
+            "description": "Country bias (e.g., us, gb, ca).", 
+            "default": "us" 
+          },
+          "hl": { 
+            "type": "string", 
+            "description": "UI language.", 
+            "default": "en" 
+          },
+          "lr": { 
+            "type": "string", 
+            "description": "Document language filter.", 
+            "default": "lang_en" 
+          },
+          "num": { 
+            "type": "integer", 
+            "description": "Max results (<=10).", 
+            "default": 8, 
+            "minimum": 1, 
+            "maximum": 10 
+          },
+          "primaryOnly": { 
+            "type": "boolean", 
+            "description": "Return only primary articles per selection policy.", 
+            "default": true 
+          }
+        },
+        "required": ["topic"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "snippet": { "type": "string" },
+                "url": { "type": "string", "format": "uri" },
+                "source": { "type": "string" },
+                "date": { "type": "string", "nullable": true },
+                "lang": { "type": "string", "nullable": true },
+                "signals": {
+                  "type": "object",
+                  "properties": {
+                    "hasNewsSchema": { "type": "boolean" },
+                    "hasPublishedTime": { "type": "boolean" },
+                    "opinionLikely": { "type": "boolean" },
+                    "blockedReason": { "type": "string", "nullable": true }
+                  }
+                }
+              },
+              "required": ["title", "url", "source"]
+            }
+          }
+        },
+        "required": ["items"]
+      }
+    },
+    {
+      "name": "fetch_page",
+      "description": "Fetch a URL and extract the main article content & metadata for summarization.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "timeoutMs": { "type": "integer", "default": 12000 },
+          "maxChars": { "type": "integer", "default": 12000 },
+          "language": { 
+            "type": "string", 
+            "description": "Expected language (ISO 639-1)", 
+            "default": "en" 
+          }
+        },
+        "required": ["url"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "finalUrl": { "type": "string", "format": "uri" },
+          "source": { "type": "string" },
+          "title": { "type": "string", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "published_at": { "type": "string", "nullable": true },
+          "byline": { "type": "string", "nullable": true },
+          "text": { "type": "string", "nullable": true },
+          "word_count": { "type": "integer", "nullable": true },
+          "lang_detected": { "type": "string", "nullable": true },
+          "paywalled": { "type": "boolean", "default": false },
+          "quality_flags": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["url", "finalUrl", "source"]
+      }
+    }
+  ]
+}

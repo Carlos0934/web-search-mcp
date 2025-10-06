@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  web-search-mcp:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+      - GOOGLE_CSE_KEY=${GOOGLE_CSE_KEY}
+      - GOOGLE_CSE_CX=${GOOGLE_CSE_CX}
+      - NEWS_DEFAULT_GL=${NEWS_DEFAULT_GL:-us}
+      - NEWS_DEFAULT_HL=${NEWS_DEFAULT_HL:-en}
+      - NEWS_DEFAULT_LR=${NEWS_DEFAULT_LR:-lang_en}
+      - NEWS_DEFAULT_DATE_RESTRICT=${NEWS_DEFAULT_DATE_RESTRICT:-d3}
+      - FETCH_TIMEOUT_MS=${FETCH_TIMEOUT_MS:-12000}
+      - FETCH_MAX_CHARS=${FETCH_MAX_CHARS:-12000}
+      - USER_AGENT=${USER_AGENT:-Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36}
+    volumes:
+      - ./mcp.config.json:/app/mcp.config.json:ro
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

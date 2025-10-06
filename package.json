@@ -1,0 +1,40 @@
+{
+  "name": "web-search-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for web search using Google CSE and article fetching",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/server.ts",
+    "start": "node dist/server.js",
+    "clean": "rimraf dist",
+    "watch": "tsx watch src/server.ts"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "news",
+    "search",
+    "google",
+    "web-scraping"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.19.1",
+    "jsdom": "^27.0.0",
+    "@mozilla/readability": "^0.5.0",
+    "franc": "^6.2.0",
+    "date-fns": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^22.7.9",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

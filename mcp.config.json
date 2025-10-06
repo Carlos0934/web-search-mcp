@@ -1,0 +1,31 @@
+{
+  "transport": "http",
+  "port": 3000,
+  "host": "127.0.0.1",
+  "logLevel": "info",
+  "rateLimit": {
+    "windowMs": 60000,
+    "max": 120
+  },
+  "dedupe": {
+    "normalizeTitles": true,
+    "windowMinutes": 60
+  },
+  "allowOpinion": false,
+  "allowedDomains": [],
+  "blockedDomains": [
+    "podcasts.apple.com",
+    "open.spotify.com",
+    "youtube.com",
+    "youtu.be",
+    "soundcloud.com",
+    "reddit.com",
+    "medium.com",
+    "substack.com",
+    "facebook.com",
+    "x.com",
+    "twitter.com",
+    "tiktok.com",
+    "linktr.ee"
+  ]
+}
