@@ -1,52 +1,83 @@
-# Use Node.js 22 LTS Alpine for smaller image size
-FROM node:22-alpine
+# Stage 1: Build stage
+FROM node:22-alpine AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Install dependencies for native modules
+# Install pnpm - use specific version for reproducibility
+RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
+
+# Install build dependencies for native modules
 RUN apk add --no-cache \
     python3 \
     make \
     g++ \
-    cairo-dev \
-    pango-dev \
-    libjpeg-turbo-dev \
-    giflib-dev \
-    librsvg-dev \
-    pixman-dev
+    git
 
 # Copy package files
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml* ./
 
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install all dependencies (including devDependencies for building)
+# Use --no-frozen-lockfile for flexibility with lockfile versions
+RUN pnpm install --no-frozen-lockfile
 
 # Copy source code
-COPY . .
+COPY tsconfig.json ./
+COPY src ./src
 
 # Build the TypeScript code
-RUN npm run build
+RUN pnpm run build
+
+# Remove devDependencies
+RUN pnpm prune --prod
+
+# Stage 2: Runtime stage
+FROM node:22-alpine AS runtime
+
+# Set working directory
+WORKDIR /app
+
+# Install only runtime dependencies needed for native modules
+# jsdom requires some libraries, but we minimize what we install
+RUN apk add --no-cache \
+    tini
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nextjs -u 1001
+    adduser -S nodejs -u 1001
+
+# Copy production dependencies from builder
+COPY --from=builder /app/node_modules ./node_modules
+
+# Copy built application
+COPY --from=builder /app/dist ./dist
+
+# Copy package.json (needed for node to resolve modules)
+COPY --from=builder /app/package.json ./package.json
+
+# Copy configuration files
+COPY mcp.config.json ./
 
 # Change ownership of the app directory
-RUN chown -R nextjs:nodejs /app
-USER nextjs
+RUN chown -R nodejs:nodejs /app
+
+# Switch to non-root user
+USER nodejs
 
 # Expose the port
 EXPOSE 3000
 
 # Set environment variables
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV HOST=0.0.0.0
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOST=0.0.0.0
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+
+# Use tini to handle signals properly
+ENTRYPOINT ["/sbin/tini", "--"]
 
 # Start the server
 CMD ["node", "dist/server.js"]

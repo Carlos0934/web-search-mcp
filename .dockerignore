@@ -1,19 +1,73 @@
+# Node modules
 node_modules
 npm-debug.log
+yarn-error.log
+pnpm-debug.log
+.pnpm-store
+
+# Environment and secrets
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+*.key
+*.pem
+
+# Git
 .git
 .gitignore
-README.md
-.DS_Store
-Thumbs.db
+.gitattributes
+
+# GitHub
+.github
+
+# IDE
 .vscode
 .idea
-*.log
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist
 coverage
 .nyc_output
-dist
+*.tsbuildinfo
+
+# Documentation
+README.md
+*.md
+!mcp.config.json
+
+# Examples and tests
 examples
+test
+tests
+__tests__
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Logs
+logs
+*.log
+
+# Temporary files
+tmp
+temp
+.tmp

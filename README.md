@@ -1,5 +1,9 @@
 # Web Search MCP Server
 
+[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+[![Docker Publish](https://github.com/OWNER/REPO/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/docker-publish.yml)
+[![Release](https://github.com/OWNER/REPO/actions/workflows/release.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/release.yml)
+
 A Model Context Protocol (MCP) server implementing Streamable HTTP transport for web search capabilities using Google Custom Search Engine (CSE) and article content extraction.
 
 ## Features
@@ -14,6 +18,27 @@ A Model Context Protocol (MCP) server implementing Streamable HTTP transport for
 - **Error Handling**: Comprehensive error handling with MCP-compliant responses
 
 ## Installation
+
+### Using Docker (Recommended)
+
+Pull the latest image from GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/OWNER/REPO:latest
+```
+
+Or use Docker Compose:
+
+```bash
+# Create .env file with your credentials
+cp .env.example .env
+# Edit .env with your Google CSE credentials
+
+# Start the service
+docker-compose up -d
+```
+
+### From Source
 
 1. Clone the repository
 2. Install dependencies:
@@ -182,6 +207,27 @@ curl -X POST http://localhost:3000/mcp \
 - **Paywall Detection**: Identifies paywalled content
 - **SSE Streaming**: Support for Server-Sent Events with resumable connections
 - **Origin Validation**: DNS rebinding attack protection
+
+## CI/CD & Deployment
+
+This project uses GitHub Actions for continuous integration and deployment. Docker images are automatically built and published to GitHub Container Registry.
+
+**Automated workflows:**
+- ✅ Continuous Integration (lint, test, build)
+- ✅ Docker image publishing (multi-platform: amd64, arm64)
+- ✅ Automated releases with semantic versioning
+- ✅ Security scanning with Trivy
+- ✅ Dependency updates with Dependabot
+
+**Available Docker tags:**
+```bash
+ghcr.io/OWNER/REPO:latest      # Latest stable release
+ghcr.io/OWNER/REPO:v1.0.0      # Specific version
+ghcr.io/OWNER/REPO:v1.0        # Minor version
+ghcr.io/OWNER/REPO:main        # Latest main branch
+```
+
+See [CI_CD.md](./CI_CD.md) for complete CI/CD documentation.
 
 ## Error Handling
 
