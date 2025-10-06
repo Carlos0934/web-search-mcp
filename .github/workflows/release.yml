@@ -150,7 +150,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v3
         with:
           subject-name: ghcr.io/${{ github.repository }}
           subject-digest: ${{ steps.meta.outputs.digest }}
