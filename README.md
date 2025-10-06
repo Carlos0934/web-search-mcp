@@ -24,7 +24,7 @@ A Model Context Protocol (MCP) server implementing Streamable HTTP transport for
 Pull the latest image from GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/OWNER/REPO:latest
+ghcr.io/carlos0934/web-search-mcp:latest
 ```
 
 Or use Docker Compose:
