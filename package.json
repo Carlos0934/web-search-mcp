@@ -22,13 +22,13 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.19.1",
-    "jsdom": "^27.0.0",
+    "jsdom": "^27.0.1",
     "@mozilla/readability": "^0.6.0",
     "franc": "^6.2.0",
     "date-fns": "^4.1.0"
   },
   "devDependencies": {
-    "@types/jsdom": "^21.1.7",
+    "@types/jsdom": "^27.0.0",
     "@types/node": "^22.7.9",
     "rimraf": "^6.0.1",
     "tsx": "4.20.6",
